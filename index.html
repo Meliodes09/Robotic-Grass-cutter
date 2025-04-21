@@ -1,0 +1,852 @@
+<html class="scroll-smooth" lang="en">
+ <head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1" name="viewport"/>
+  <title>
+   Robot Mower Control App Wireframes
+  </title>
+  <script src="https://cdn.tailwindcss.com">
+  </script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&amp;display=swap" rel="stylesheet"/>
+  <style>
+   body {
+      font-family: 'Inter', sans-serif;
+    }
+  </style>
+ </head>
+ <body class="bg-gray-50 text-gray-800 min-h-screen flex flex-col">
+  <!-- Container for all screens -->
+  <main class="flex-grow max-w-md mx-auto w-full bg-white shadow-md rounded-b-3xl overflow-hidden">
+   <!-- 1. Main Control Screen -->
+   <section class="p-4 space-y-6" id="main-control-screen">
+    <!-- Top Section: Status Indicators -->
+    <div class="flex justify-between items-center">
+     <div class="flex items-center space-x-4">
+      <div class="flex items-center space-x-1">
+       <i class="fas fa-robot text-green-600 text-xl">
+       </i>
+       <span class="font-semibold text-lg">
+        Status:
+       </span>
+       <span class="text-green-600 font-semibold" id="robot-status">
+        Idle
+       </span>
+      </div>
+      <div class="flex items-center space-x-1">
+       <i class="fas fa-battery-three-quarters text-yellow-500 text-xl">
+       </i>
+       <span class="font-semibold" id="battery-level">
+        85%
+       </span>
+      </div>
+     </div>
+     <div class="flex items-center space-x-2">
+      <i class="fas fa-wifi text-blue-500 text-xl">
+      </i>
+      <span class="text-sm font-medium text-blue-600">
+       Connected
+      </span>
+     </div>
+    </div>
+    <!-- Mode Switching -->
+    <div class="flex justify-center space-x-4">
+     <button aria-pressed="false" class="flex-1 py-3 rounded-lg border-2 border-gray-300 text-gray-700 font-semibold hover:border-blue-600 hover:text-blue-600 transition-colors" id="manual-mode-btn" type="button">
+      Manual Mode
+     </button>
+     <button aria-pressed="true" class="flex-1 py-3 rounded-lg border-2 border-blue-600 bg-blue-600 text-white font-semibold" id="autonomous-mode-btn" type="button">
+      Autonomous Mode
+     </button>
+    </div>
+    <!-- Autonomous Mode Controls -->
+    <div class="space-y-4" id="autonomous-controls">
+     <button class="w-full py-3 rounded-lg bg-green-600 text-white font-bold text-lg hover:bg-green-700 transition-colors" id="start-stop-autonomous" type="button">
+      Start Autonomous Mowing
+     </button>
+     <button class="w-full py-3 rounded-lg border-2 border-gray-300 flex items-center justify-center space-x-2 hover:border-blue-600 hover:text-blue-600 transition-colors" id="schedule-nav-btn" type="button">
+      <i class="fas fa-clock text-xl">
+      </i>
+      <span class="font-semibold">
+       Schedule
+      </span>
+     </button>
+     <div class="border rounded-lg overflow-hidden">
+      <img alt="Map showing the planned or current path of the robot mower on a green lawn with boundaries and obstacles" class="w-full h-auto" height="200" loading="lazy" src="https://storage.googleapis.com/a1aa/image/e7fea763-bd99-490f-1f43-b8d5ed8621e7.jpg" width="400"/>
+     </div>
+    </div>
+    <!-- Manual Mode Controls (hidden by default) -->
+    <div class="hidden space-y-6" id="manual-controls">
+     <!-- Directional Buttons -->
+     <div class="grid grid-cols-3 gap-4 justify-items-center items-center">
+      <button aria-label="Move Forward" class="w-16 h-16 rounded-full bg-gray-200 hover:bg-gray-300 flex items-center justify-center text-gray-700 text-2xl" id="btn-forward" type="button">
+       <i class="fas fa-arrow-up">
+       </i>
+      </button>
+      <div>
+      </div>
+      <button aria-label="Turn Left" class="w-16 h-16 rounded-full bg-gray-200 hover:bg-gray-300 flex items-center justify-center text-gray-700 text-2xl" id="btn-left" type="button">
+       <i class="fas fa-arrow-left">
+       </i>
+      </button>
+      <button aria-label="Stop" class="w-16 h-16 rounded-full bg-red-500 hover:bg-red-600 text-white flex items-center justify-center text-2xl font-bold" id="btn-stop" type="button">
+       <i class="fas fa-stop">
+       </i>
+      </button>
+      <button aria-label="Turn Right" class="w-16 h-16 rounded-full bg-gray-200 hover:bg-gray-300 flex items-center justify-center text-gray-700 text-2xl" id="btn-right" type="button">
+       <i class="fas fa-arrow-right">
+       </i>
+      </button>
+      <div>
+      </div>
+      <button aria-label="Move Backward" class="w-16 h-16 rounded-full bg-gray-200 hover:bg-gray-300 flex items-center justify-center text-gray-700 text-2xl" id="btn-backward" type="button">
+       <i class="fas fa-arrow-down">
+       </i>
+      </button>
+     </div>
+     <!-- Mow On/Off Toggle -->
+     <div class="flex items-center justify-center space-x-4">
+      <span class="font-semibold text-lg">
+       Mow:
+      </span>
+      <button aria-pressed="false" class="w-20 py-2 rounded-full bg-gray-300 text-gray-700 font-semibold hover:bg-green-600 hover:text-white transition-colors" id="mow-toggle-btn" type="button">
+       Off
+      </button>
+     </div>
+    </div>
+   </section>
+   <!-- 2. Manual Control Screen (dedicated) -->
+   <section class="hidden p-4 space-y-6" id="manual-control-screen">
+    <h2 class="text-xl font-semibold text-center">
+     Manual Control
+    </h2>
+    <!-- Directional Buttons -->
+    <div class="grid grid-cols-3 gap-4 justify-items-center items-center">
+     <button aria-label="Move Forward" class="w-20 h-20 rounded-full bg-gray-200 hover:bg-gray-300 flex items-center justify-center text-gray-700 text-3xl" id="manual-forward" type="button">
+      <i class="fas fa-arrow-up">
+      </i>
+     </button>
+     <div>
+     </div>
+     <button aria-label="Turn Left" class="w-20 h-20 rounded-full bg-gray-200 hover:bg-gray-300 flex items-center justify-center text-gray-700 text-3xl" id="manual-left" type="button">
+      <i class="fas fa-arrow-left">
+      </i>
+     </button>
+     <button aria-label="Emergency Stop" class="w-20 h-20 rounded-full bg-red-600 hover:bg-red-700 text-white flex items-center justify-center text-3xl font-bold" id="manual-stop" type="button">
+      <i class="fas fa-stop">
+      </i>
+     </button>
+     <button aria-label="Turn Right" class="w-20 h-20 rounded-full bg-gray-200 hover:bg-gray-300 flex items-center justify-center text-gray-700 text-3xl" id="manual-right" type="button">
+      <i class="fas fa-arrow-right">
+      </i>
+     </button>
+     <div>
+     </div>
+     <button aria-label="Move Backward" class="w-20 h-20 rounded-full bg-gray-200 hover:bg-gray-300 flex items-center justify-center text-gray-700 text-3xl" id="manual-backward" type="button">
+      <i class="fas fa-arrow-down">
+      </i>
+     </button>
+    </div>
+    <!-- Mow On/Off Toggle -->
+    <div class="flex items-center justify-center space-x-4">
+     <span class="font-semibold text-lg">
+      Mow:
+     </span>
+     <button aria-pressed="false" class="w-24 py-3 rounded-full bg-gray-300 text-gray-700 font-semibold hover:bg-green-600 hover:text-white transition-colors" id="manual-mow-toggle-btn" type="button">
+      Off
+     </button>
+    </div>
+    <!-- Speed Control Slider -->
+    <div class="px-4">
+     <label class="block font-semibold mb-2 text-center" for="speed-range">
+      Speed Control
+     </label>
+     <input aria-label="Manual driving speed control slider" aria-valuemax="10" aria-valuemin="1" aria-valuenow="5" class="w-full" id="speed-range" max="10" min="1" type="range" value="5"/>
+    </div>
+    <!-- Back Button -->
+    <div class="flex justify-center">
+     <button class="px-6 py-3 rounded-lg bg-blue-600 text-white font-semibold hover:bg-blue-700 transition-colors" id="manual-back-btn" type="button">
+      Back
+     </button>
+    </div>
+   </section>
+   <!-- 3. Scheduling Screen -->
+   <section class="hidden p-4 flex flex-col h-full" id="scheduling-screen">
+    <h2 class="text-xl font-semibold mb-4 text-center">
+     Scheduled Mowing Sessions
+    </h2>
+    <ul class="flex-grow overflow-y-auto space-y-3" id="schedule-list">
+     <li class="flex justify-between items-center border rounded-lg p-3 bg-gray-100">
+      <div>
+       <p class="font-semibold">
+        Monday, Wednesday, Friday
+       </p>
+       <p class="text-sm text-gray-600">
+        08:00 AM
+       </p>
+      </div>
+      <div class="flex space-x-3">
+       <button aria-label="Edit schedule Monday, Wednesday, Friday 08:00 AM" class="text-blue-600 hover:text-blue-800" type="button">
+        <i class="fas fa-edit">
+        </i>
+       </button>
+       <button aria-label="Delete schedule Monday, Wednesday, Friday 08:00 AM" class="text-red-600 hover:text-red-800" type="button">
+        <i class="fas fa-trash-alt">
+        </i>
+       </button>
+      </div>
+     </li>
+     <li class="flex justify-between items-center border rounded-lg p-3 bg-gray-100">
+      <div>
+       <p class="font-semibold">
+        Tuesday, Thursday
+       </p>
+       <p class="text-sm text-gray-600">
+        06:30 PM
+       </p>
+      </div>
+      <div class="flex space-x-3">
+       <button aria-label="Edit schedule Tuesday, Thursday 06:30 PM" class="text-blue-600 hover:text-blue-800" type="button">
+        <i class="fas fa-edit">
+        </i>
+       </button>
+       <button aria-label="Delete schedule Tuesday, Thursday 06:30 PM" class="text-red-600 hover:text-red-800" type="button">
+        <i class="fas fa-trash-alt">
+        </i>
+       </button>
+      </div>
+     </li>
+     <li class="flex justify-between items-center border rounded-lg p-3 bg-gray-100">
+      <div>
+       <p class="font-semibold">
+        Saturday
+       </p>
+       <p class="text-sm text-gray-600">
+        09:00 AM
+       </p>
+      </div>
+      <div class="flex space-x-3">
+       <button aria-label="Edit schedule Saturday 09:00 AM" class="text-blue-600 hover:text-blue-800" type="button">
+        <i class="fas fa-edit">
+        </i>
+       </button>
+       <button aria-label="Delete schedule Saturday 09:00 AM" class="text-red-600 hover:text-red-800" type="button">
+        <i class="fas fa-trash-alt">
+        </i>
+       </button>
+      </div>
+     </li>
+     <li class="flex justify-between items-center border rounded-lg p-3 bg-gray-100">
+      <div>
+       <p class="font-semibold">
+        Sunday
+       </p>
+       <p class="text-sm text-gray-600">
+        10:00 AM
+       </p>
+      </div>
+      <div class="flex space-x-3">
+       <button aria-label="Edit schedule Sunday 10:00 AM" class="text-blue-600 hover:text-blue-800" type="button">
+        <i class="fas fa-edit">
+        </i>
+       </button>
+       <button aria-label="Delete schedule Sunday 10:00 AM" class="text-red-600 hover:text-red-800" type="button">
+        <i class="fas fa-trash-alt">
+        </i>
+       </button>
+      </div>
+     </li>
+     <li class="flex justify-between items-center border rounded-lg p-3 bg-gray-100">
+      <div>
+       <p class="font-semibold">
+        Monday
+       </p>
+       <p class="text-sm text-gray-600">
+        07:00 PM
+       </p>
+      </div>
+      <div class="flex space-x-3">
+       <button aria-label="Edit schedule Monday 07:00 PM" class="text-blue-600 hover:text-blue-800" type="button">
+        <i class="fas fa-edit">
+        </i>
+       </button>
+       <button aria-label="Delete schedule Monday 07:00 PM" class="text-red-600 hover:text-red-800" type="button">
+        <i class="fas fa-trash-alt">
+        </i>
+       </button>
+      </div>
+     </li>
+     <li class="flex justify-between items-center border rounded-lg p-3 bg-gray-100">
+      <div>
+       <p class="font-semibold">
+        Wednesday
+       </p>
+       <p class="text-sm text-gray-600">
+        05:30 PM
+       </p>
+      </div>
+      <div class="flex space-x-3">
+       <button aria-label="Edit schedule Wednesday 05:30 PM" class="text-blue-600 hover:text-blue-800" type="button">
+        <i class="fas fa-edit">
+        </i>
+       </button>
+       <button aria-label="Delete schedule Wednesday 05:30 PM" class="text-red-600 hover:text-red-800" type="button">
+        <i class="fas fa-trash-alt">
+        </i>
+       </button>
+      </div>
+     </li>
+     <li class="flex justify-between items-center border rounded-lg p-3 bg-gray-100">
+      <div>
+       <p class="font-semibold">
+        Friday
+       </p>
+       <p class="text-sm text-gray-600">
+        08:30 AM
+       </p>
+      </div>
+      <div class="flex space-x-3">
+       <button aria-label="Edit schedule Friday 08:30 AM" class="text-blue-600 hover:text-blue-800" type="button">
+        <i class="fas fa-edit">
+        </i>
+       </button>
+       <button aria-label="Delete schedule Friday 08:30 AM" class="text-red-600 hover:text-red-800" type="button">
+        <i class="fas fa-trash-alt">
+        </i>
+       </button>
+      </div>
+     </li>
+     <li class="flex justify-between items-center border rounded-lg p-3 bg-gray-100">
+      <div>
+       <p class="font-semibold">
+        Saturday
+       </p>
+       <p class="text-sm text-gray-600">
+        04:00 PM
+       </p>
+      </div>
+      <div class="flex space-x-3">
+       <button aria-label="Edit schedule Saturday 04:00 PM" class="text-blue-600 hover:text-blue-800" type="button">
+        <i class="fas fa-edit">
+        </i>
+       </button>
+       <button aria-label="Delete schedule Saturday 04:00 PM" class="text-red-600 hover:text-red-800" type="button">
+        <i class="fas fa-trash-alt">
+        </i>
+       </button>
+      </div>
+     </li>
+     <li class="flex justify-between items-center border rounded-lg p-3 bg-gray-100">
+      <div>
+       <p class="font-semibold">
+        Sunday
+       </p>
+       <p class="text-sm text-gray-600">
+        11:00 AM
+       </p>
+      </div>
+      <div class="flex space-x-3">
+       <button aria-label="Edit schedule Sunday 11:00 AM" class="text-blue-600 hover:text-blue-800" type="button">
+        <i class="fas fa-edit">
+        </i>
+       </button>
+       <button aria-label="Delete schedule Sunday 11:00 AM" class="text-red-600 hover:text-red-800" type="button">
+        <i class="fas fa-trash-alt">
+        </i>
+       </button>
+      </div>
+     </li>
+     <li class="flex justify-between items-center border rounded-lg p-3 bg-gray-100">
+      <div>
+       <p class="font-semibold">
+        Tuesday
+       </p>
+       <p class="text-sm text-gray-600">
+        07:30 AM
+       </p>
+      </div>
+      <div class="flex space-x-3">
+       <button aria-label="Edit schedule Tuesday 07:30 AM" class="text-blue-600 hover:text-blue-800" type="button">
+        <i class="fas fa-edit">
+        </i>
+       </button>
+       <button aria-label="Delete schedule Tuesday 07:30 AM" class="text-red-600 hover:text-red-800" type="button">
+        <i class="fas fa-trash-alt">
+        </i>
+       </button>
+      </div>
+     </li>
+     <li class="flex justify-between items-center border rounded-lg p-3 bg-gray-100">
+      <div>
+       <p class="font-semibold">
+        Thursday
+       </p>
+       <p class="text-sm text-gray-600">
+        06:00 PM
+       </p>
+      </div>
+      <div class="flex space-x-3">
+       <button aria-label="Edit schedule Thursday 06:00 PM" class="text-blue-600 hover:text-blue-800" type="button">
+        <i class="fas fa-edit">
+        </i>
+       </button>
+       <button aria-label="Delete schedule Thursday 06:00 PM" class="text-red-600 hover:text-red-800" type="button">
+        <i class="fas fa-trash-alt">
+        </i>
+       </button>
+      </div>
+     </li>
+     <li class="flex justify-between items-center border rounded-lg p-3 bg-gray-100">
+      <div>
+       <p class="font-semibold">
+        Friday
+       </p>
+       <p class="text-sm text-gray-600">
+        09:30 AM
+       </p>
+      </div>
+      <div class="flex space-x-3">
+       <button aria-label="Edit schedule Friday 09:30 AM" class="text-blue-600 hover:text-blue-800" type="button">
+        <i class="fas fa-edit">
+        </i>
+       </button>
+       <button aria-label="Delete schedule Friday 09:30 AM" class="text-red-600 hover:text-red-800" type="button">
+        <i class="fas fa-trash-alt">
+        </i>
+       </button>
+      </div>
+     </li>
+    </ul>
+    <button class="mt-4 w-full py-3 rounded-lg bg-blue-600 text-white font-semibold hover:bg-blue-700 transition-colors" id="add-new-schedule-btn" type="button">
+     Add New Schedule
+    </button>
+    <!-- Back Button -->
+    <div class="mt-4 flex justify-center">
+     <button class="px-6 py-3 rounded-lg bg-gray-300 text-gray-700 font-semibold hover:bg-gray-400 transition-colors" id="schedule-back-btn" type="button">
+      Back
+     </button>
+    </div>
+   </section>
+   <!-- 3b. Schedule Add/Edit Form -->
+   <section class="hidden p-4 flex flex-col h-full" id="schedule-form-screen">
+    <h2 class="text-xl font-semibold mb-4 text-center" id="schedule-form-title">
+     Add New Schedule
+    </h2>
+    <form aria-label="Schedule form" class="flex flex-col space-y-4">
+     <!-- Days of the week checkboxes -->
+     <fieldset class="space-y-2">
+      <legend class="font-semibold">
+       Select Day(s) of the Week
+      </legend>
+      <div class="grid grid-cols-3 gap-2">
+       <label class="inline-flex items-center space-x-2">
+        <input class="form-checkbox h-5 w-5 text-blue-600" name="days" type="checkbox" value="Monday"/>
+        <span>
+         Monday
+        </span>
+       </label>
+       <label class="inline-flex items-center space-x-2">
+        <input class="form-checkbox h-5 w-5 text-blue-600" name="days" type="checkbox" value="Tuesday"/>
+        <span>
+         Tuesday
+        </span>
+       </label>
+       <label class="inline-flex items-center space-x-2">
+        <input class="form-checkbox h-5 w-5 text-blue-600" name="days" type="checkbox" value="Wednesday"/>
+        <span>
+         Wednesday
+        </span>
+       </label>
+       <label class="inline-flex items-center space-x-2">
+        <input class="form-checkbox h-5 w-5 text-blue-600" name="days" type="checkbox" value="Thursday"/>
+        <span>
+         Thursday
+        </span>
+       </label>
+       <label class="inline-flex items-center space-x-2">
+        <input class="form-checkbox h-5 w-5 text-blue-600" name="days" type="checkbox" value="Friday"/>
+        <span>
+         Friday
+        </span>
+       </label>
+       <label class="inline-flex items-center space-x-2">
+        <input class="form-checkbox h-5 w-5 text-blue-600" name="days" type="checkbox" value="Saturday"/>
+        <span>
+         Saturday
+        </span>
+       </label>
+       <label class="inline-flex items-center space-x-2">
+        <input class="form-checkbox h-5 w-5 text-blue-600" name="days" type="checkbox" value="Sunday"/>
+        <span>
+         Sunday
+        </span>
+       </label>
+      </div>
+     </fieldset>
+     <!-- Time selection -->
+     <div>
+      <label class="block font-semibold mb-1" for="time-input">
+       Select Time
+      </label>
+      <input class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-600" id="time-input" name="time" required="" type="time"/>
+     </div>
+     <!-- Recurrence (optional) -->
+     <div>
+      <label class="block font-semibold mb-1" for="recurrence-select">
+       Recurrence
+      </label>
+      <select class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-600" id="recurrence-select" name="recurrence">
+       <option selected="" value="weekly">
+        Weekly
+       </option>
+       <option value="bi-weekly">
+        Bi-Weekly
+       </option>
+       <option value="monthly">
+        Monthly
+       </option>
+      </select>
+     </div>
+     <!-- Buttons -->
+     <div class="flex justify-between space-x-4">
+      <button class="flex-1 py-3 rounded-lg bg-green-600 text-white font-semibold hover:bg-green-700 transition-colors" id="save-schedule-btn" type="submit">
+       Save
+      </button>
+      <button class="flex-1 py-3 rounded-lg bg-gray-300 text-gray-700 font-semibold hover:bg-gray-400 transition-colors" id="cancel-schedule-btn" type="button">
+       Cancel
+      </button>
+     </div>
+    </form>
+   </section>
+   <!-- 4. Settings Screen -->
+   <section class="hidden p-4 space-y-6" id="settings-screen">
+    <h2 class="text-xl font-semibold text-center mb-4">
+     Settings
+    </h2>
+    <!-- Wi-Fi Configuration -->
+    <div class="border rounded-lg p-4 bg-gray-100 space-y-3">
+     <h3 class="font-semibold text-lg">
+      Wi-Fi Configuration
+     </h3>
+     <p class="text-sm text-gray-700">
+      Connect the app to the same Wi-Fi network as the robot.
+     </p>
+     <label class="block font-semibold mt-2 mb-1" for="wifi-network">
+      Available Networks
+     </label>
+     <select class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-600" id="wifi-network">
+      <option>
+       Home_WiFi_2.4GHz
+      </option>
+      <option>
+       Garden_Network
+      </option>
+      <option>
+       Robot_Mower_Network
+      </option>
+      <option>
+       Guest_WiFi
+      </option>
+     </select>
+     <label class="block font-semibold mt-2 mb-1" for="wifi-password">
+      Password
+     </label>
+     <input class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-600" id="wifi-password" placeholder="Enter Wi-Fi password" type="password"/>
+     <button class="mt-3 w-full py-3 rounded-lg bg-blue-600 text-white font-semibold hover:bg-blue-700 transition-colors" id="connect-wifi-btn" type="button">
+      Connect
+     </button>
+    </div>
+    <!-- Robot Pairing/Connection -->
+    <div class="border rounded-lg p-4 bg-gray-100 space-y-3">
+     <h3 class="font-semibold text-lg">
+      Robot Pairing / Connection
+     </h3>
+     <p class="text-sm text-gray-700">
+      Pair your app with the robot via Bluetooth for initial setup.
+     </p>
+     <button class="w-full py-3 rounded-lg bg-green-600 text-white font-semibold hover:bg-green-700 transition-colors" id="pair-robot-btn" type="button">
+      Pair Robot
+     </button>
+    </div>
+    <!-- Sensor Calibration (optional) -->
+    <div class="border rounded-lg p-4 bg-gray-100 space-y-3">
+     <h3 class="font-semibold text-lg">
+      Sensor Calibration
+     </h3>
+     <p class="text-sm text-gray-700">
+      Calibrate sensors to ensure accurate operation.
+     </p>
+     <button class="w-full py-3 rounded-lg bg-yellow-500 text-white font-semibold hover:bg-yellow-600 transition-colors" id="calibrate-sensors-btn" type="button">
+      Calibrate Sensors
+     </button>
+    </div>
+    <!-- Firmware Update (optional) -->
+    <div class="border rounded-lg p-4 bg-gray-100 space-y-3">
+     <h3 class="font-semibold text-lg">
+      Firmware Update
+     </h3>
+     <p class="text-sm text-gray-700">
+      Update the robot's firmware to the latest version.
+     </p>
+     <button class="w-full py-3 rounded-lg bg-purple-600 text-white font-semibold hover:bg-purple-700 transition-colors" id="firmware-update-btn" type="button">
+      Check for Updates
+     </button>
+    </div>
+    <!-- About Section -->
+    <div class="border rounded-lg p-4 bg-gray-100 space-y-1 text-center text-sm text-gray-600">
+     <p>
+      Robot Mower Control App v1.0.0
+     </p>
+     <p>
+      Developed by Your Company
+     </p>
+     <p>
+      © 2024 All rights reserved.
+     </p>
+    </div>
+    <!-- Back Button -->
+    <div class="flex justify-center">
+     <button class="px-6 py-3 rounded-lg bg-gray-300 text-gray-700 font-semibold hover:bg-gray-400 transition-colors" id="settings-back-btn" type="button">
+      Back
+     </button>
+    </div>
+   </section>
+   <!-- 5. Pairing/Connection Screen -->
+   <section class="hidden p-4 flex flex-col h-full" id="pairing-screen">
+    <h2 class="text-xl font-semibold mb-4 text-center">
+     Robot Pairing &amp; Connection
+    </h2>
+    <div class="space-y-4 flex-grow overflow-y-auto">
+     <div class="border rounded-lg p-4 bg-gray-100 space-y-3">
+      <h3 class="font-semibold text-lg">
+       Instructions
+      </h3>
+      <ol class="list-decimal list-inside text-gray-700 space-y-2 text-sm">
+       <li>
+        Make sure your robot is powered on.
+       </li>
+       <li>
+        Ensure your phone is connected to the same Wi-Fi network as the robot.
+       </li>
+       <li>
+        Tap "Discover Robots" to find available devices.
+       </li>
+       <li>
+        If your robot does not appear, enter its IP address manually.
+       </li>
+      </ol>
+     </div>
+     <div class="border rounded-lg p-4 bg-gray-100 space-y-3">
+      <h3 class="font-semibold text-lg">
+       Available Robots
+      </h3>
+      <ul class="space-y-2 text-gray-700 text-sm">
+       <li class="flex justify-between items-center border rounded p-2 bg-white">
+        <span>
+         Robot Mower #1 (192.168.1.45)
+        </span>
+        <button class="text-blue-600 hover:text-blue-800 font-semibold" type="button">
+         Connect
+        </button>
+       </li>
+       <li class="flex justify-between items-center border rounded p-2 bg-white">
+        <span>
+         Robot Mower #2 (192.168.1.46)
+        </span>
+        <button class="text-blue-600 hover:text-blue-800 font-semibold" type="button">
+         Connect
+        </button>
+       </li>
+      </ul>
+     </div>
+     <div class="border rounded-lg p-4 bg-gray-100 space-y-3">
+      <h3 class="font-semibold text-lg">
+       Manual IP Address Input
+      </h3>
+      <input class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-600" id="manual-ip-input" placeholder="Enter IP address (e.g., 192.168.1.45)" type="text"/>
+      <button class="w-full py-3 rounded-lg bg-blue-600 text-white font-semibold hover:bg-blue-700 transition-colors" id="manual-ip-connect-btn" type="button">
+       Connect
+      </button>
+     </div>
+     <div class="border rounded-lg p-4 bg-gray-100 space-y-3 text-center">
+      <h3 class="font-semibold text-lg">
+       Connection Status
+      </h3>
+      <p class="text-gray-700 text-sm" id="connection-status-text">
+       Not connected
+      </p>
+      <div class="flex justify-center mt-2" id="connection-status-icon">
+       <i class="fas fa-times-circle text-red-500 text-4xl">
+       </i>
+      </div>
+     </div>
+    </div>
+    <!-- Back Button -->
+    <div class="mt-4 flex justify-center">
+     <button class="px-6 py-3 rounded-lg bg-gray-300 text-gray-700 font-semibold hover:bg-gray-400 transition-colors" id="pairing-back-btn" type="button">
+      Back
+     </button>
+    </div>
+   </section>
+  </main>
+  <!-- Bottom Navigation -->
+  <nav aria-label="Primary" class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-300 max-w-md mx-auto flex justify-around items-center py-2 shadow-inner" id="bottom-nav" role="navigation">
+   <button aria-current="page" class="flex flex-col items-center text-blue-600" id="nav-main-control" type="button">
+    <i class="fas fa-home text-xl">
+    </i>
+    <span class="text-xs font-semibold">
+     Control
+    </span>
+   </button>
+   <button class="flex flex-col items-center text-gray-600 hover:text-blue-600" id="nav-schedule" type="button">
+    <i class="fas fa-clock text-xl">
+    </i>
+    <span class="text-xs font-semibold">
+     Schedule
+    </span>
+   </button>
+   <button class="flex flex-col items-center text-gray-600 hover:text-blue-600" id="nav-settings" type="button">
+    <i class="fas fa-cog text-xl">
+    </i>
+    <span class="text-xs font-semibold">
+     Settings
+    </span>
+   </button>
+   <button class="flex flex-col items-center text-gray-600 hover:text-blue-600" id="nav-pairing" type="button">
+    <i class="fas fa-plug text-xl">
+    </i>
+    <span class="text-xs font-semibold">
+     Pairing
+    </span>
+   </button>
+  </nav>
+  <script>
+   // Simple screen navigation logic
+    const screens = {
+      mainControl: document.getElementById('main-control-screen'),
+      manualControl: document.getElementById('manual-control-screen'),
+      scheduling: document.getElementById('scheduling-screen'),
+      scheduleForm: document.getElementById('schedule-form-screen'),
+      settings: document.getElementById('settings-screen'),
+      pairing: document.getElementById('pairing-screen'),
+    };
+
+    const navButtons = {
+      mainControl: document.getElementById('nav-main-control'),
+      schedule: document.getElementById('nav-schedule'),
+      settings: document.getElementById('nav-settings'),
+      pairing: document.getElementById('nav-pairing'),
+    };
+
+    function showScreen(screenToShow) {
+      Object.values(screens).forEach(screen => screen.classList.add('hidden'));
+      screenToShow.classList.remove('hidden');
+      // Update bottom nav active state
+      Object.values(navButtons).forEach(btn => btn.classList.remove('text-blue-600'));
+      if (screenToShow === screens.mainControl) navButtons.mainControl.classList.add('text-blue-600');
+      else if (screenToShow === screens.scheduling) navButtons.schedule.classList.add('text-blue-600');
+      else if (screenToShow === screens.settings) navButtons.settings.classList.add('text-blue-600');
+      else if (screenToShow === screens.pairing) navButtons.pairing.classList.add('text-blue-600');
+    }
+
+    // Initial screen
+    showScreen(screens.mainControl);
+
+    // Bottom nav events
+    navButtons.mainControl.addEventListener('click', () => {
+      showScreen(screens.mainControl);
+    });
+    navButtons.schedule.addEventListener('click', () => {
+      showScreen(screens.scheduling);
+    });
+    navButtons.settings.addEventListener('click', () => {
+      showScreen(screens.settings);
+    });
+    navButtons.pairing.addEventListener('click', () => {
+      showScreen(screens.pairing);
+    });
+
+    // Mode switching buttons on Main Control Screen
+    const manualModeBtn = document.getElementById('manual-mode-btn');
+    const autonomousModeBtn = document.getElementById('autonomous-mode-btn');
+    const manualControls = document.getElementById('manual-controls');
+    const autonomousControls = document.getElementById('autonomous-controls');
+
+    manualModeBtn.addEventListener('click', () => {
+      manualModeBtn.classList.add('border-blue-600', 'bg-blue-600', 'text-white');
+      manualModeBtn.setAttribute('aria-pressed', 'true');
+      autonomousModeBtn.classList.remove('border-blue-600', 'bg-blue-600', 'text-white');
+      autonomousModeBtn.classList.add('border-gray-300', 'text-gray-700');
+      autonomousModeBtn.setAttribute('aria-pressed', 'false');
+      manualControls.classList.remove('hidden');
+      autonomousControls.classList.add('hidden');
+    });
+
+    autonomousModeBtn.addEventListener('click', () => {
+      autonomousModeBtn.classList.add('border-blue-600', 'bg-blue-600', 'text-white');
+      autonomousModeBtn.setAttribute('aria-pressed', 'true');
+      manualModeBtn.classList.remove('border-blue-600', 'bg-blue-600', 'text-white');
+      manualModeBtn.classList.add('border-gray-300', 'text-gray-700');
+      manualModeBtn.setAttribute('aria-pressed', 'false');
+      autonomousControls.classList.remove('hidden');
+      manualControls.classList.add('hidden');
+    });
+
+    // Mow toggle buttons
+    function toggleMow(button) {
+      const pressed = button.getAttribute('aria-pressed') === 'true';
+      if (pressed) {
+        button.setAttribute('aria-pressed', 'false');
+        button.textContent = 'Off';
+        button.classList.remove('bg-green-600', 'text-white');
+        button.classList.add('bg-gray-300', 'text-gray-700');
+      } else {
+        button.setAttribute('aria-pressed', 'true');
+        button.textContent = 'On';
+        button.classList.remove('bg-gray-300', 'text-gray-700');
+        button.classList.add('bg-green-600', 'text-white');
+      }
+    }
+
+    document.getElementById('mow-toggle-btn').addEventListener('click', e => toggleMow(e.target));
+    document.getElementById('manual-mow-toggle-btn').addEventListener('click', e => toggleMow(e.target));
+
+    // Navigation from Main Control to Schedule screen (button)
+    document.getElementById('schedule-nav-btn').addEventListener('click', () => {
+      showScreen(screens.scheduling);
+    });
+
+    // Back buttons
+    document.getElementById('manual-back-btn').addEventListener('click', () => {
+      showScreen(screens.mainControl);
+    });
+    document.getElementById('schedule-back-btn').addEventListener('click', () => {
+      showScreen(screens.mainControl);
+    });
+    document.getElementById('settings-back-btn').addEventListener('click', () => {
+      showScreen(screens.mainControl);
+    });
+    document.getElementById('pairing-back-btn').addEventListener('click', () => {
+      showScreen(screens.mainControl);
+    });
+
+    // Add New Schedule button
+    document.getElementById('add-new-schedule-btn').addEventListener('click', () => {
+      document.getElementById('schedule-form-title').textContent = 'Add New Schedule';
+      document.querySelector('#schedule-form-screen form').reset();
+      showScreen(screens.scheduleForm);
+    });
+
+    // Cancel schedule form
+    document.getElementById('cancel-schedule-btn').addEventListener('click', () => {
+      showScreen(screens.scheduling);
+    });
+
+    // Save schedule form (dummy)
+    document.getElementById('save-schedule-btn').addEventListener('click', e => {
+      e.preventDefault();
+      alert('Schedule saved (dummy)');
+      showScreen(screens.scheduling);
+    });
+  </script>
+ </body>
+</html>
